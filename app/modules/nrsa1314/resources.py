@@ -35,38 +35,44 @@ point = api.model(
 props = api.model(
     "Properties",
     {
-        "site_no": fields.Integer(required=True),
+        "site_id": fields.String(required=True),
+        "date_collected": fields.String(required=True),
     },
 )
 
 point_feature = api.model(
     "PointFeature",
     {
-        "id": fields.Integer(require=True),
         "type": fields.String(required=True, default="Feature"),
         "properties": fields.Nested(props, required=True),
         "geometry": fields.Nested(point, required=True),
     },
 )
 
+points_feature = api.model(
+    "PointsFeature",
+    {
+        "type": fields.String(required=True, default="FeatureCollection"),
+        "features": fields.List(fields.Nested(point_feature, required=True)),
+    },
+)
+
 
 @api.route("/site/points/")
 class Sites(Resource):
-    @api.marshal_list_with(point_feature, envelope="FeatureCollection")
+    @api.marshal_with(points_feature)
     def get(self):
         """
         Return all of the sites from the survey
         """
         connR = sqlite3.connect("/home/rick/testes.sqlite3")
-        connR.enable_load_extension(True)
-        connR.execute("SELECT load_extension('mod_spatialite')")
 
         query = """
-            select site_no,
-                st_x(geom),
-                st_y(geom),
-                st_geomfromtext("Point({lon} {lat})") as pt
-            from all_sites
+            select site_id,
+                date_col,
+                lon_dd83,
+                lat_dd83
+            from nrsa1314_allcond
             limit 3;
             """
         cursor = connR.execute(query)
@@ -74,15 +80,15 @@ class Sites(Resource):
 
         points = []
         for item in results:
-            site_no, x, y, _ = item
+            site_no, date, lon, lat = item
             dd = dict(
-                id=site_no,
-                properties=dict(site_no=site_no),
-                geometry=Geoj_point((x, y)),
+                properties=dict(site_id=site_no, date_collected=date),
+                geometry=Geoj_point((float(lon), float(lat))),
             )
             points.append(dd)
+        response = dict(features=points)
 
-        return points
+        return response
 
 
 @api.route("/site/watersheds/<int:site_id>")
