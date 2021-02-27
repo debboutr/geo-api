@@ -26,6 +26,7 @@ props = api.model(
     "Properties",
     {
         "site_id": fields.String(required=True),
+        "basin_name": fields.String(required=True),
         "date_collected": fields.String(required=True),
     },
 )
@@ -60,19 +61,20 @@ class Sites(Resource):
         query = """
             select site_id,
                 date_col,
+                maj_bas_nm,
                 lon_dd83,
                 lat_dd83
             from nrsa1314_allcond
-            limit 3;
+            limit 900;
             """
         cursor = connR.execute(query)
         results = cursor.fetchall()
 
         points = []
         for item in results:
-            site_no, date, lon, lat = item
+            site_no, date, basin_name, lon, lat = item
             dd = Feature(
-                properties=dict(site_id=site_no, date_collected=date),
+                properties=dict(site_id=site_no, basin_name=basin_name, date_collected=date),
                 geometry=Geoj_point((float(lon), float(lat))),
             )
             points.append(dd)
