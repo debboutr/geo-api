@@ -1,21 +1,11 @@
 # encoding: utf-8
 import sqlite3
-import json
 
-import geopy.distance
-import pyproj
-from app.modules.nrsa1314 import NRSA1314ApiNamespace
-from flask import request, jsonify
-from flask_restx import Namespace, Resource, abort
-from flask_restx import fields, marshal
-from functools import partial
-from geopy import Point as GeopyPoint, distance
-from http import HTTPStatus
-from shapely.geometry import Polygon, LineString
-from shapely.ops import transform
+from flask_restx import Namespace, Resource, abort, fields
 from geojson import Feature, FeatureCollection
 from geojson import Point as Geoj_point
 
+from app.modules.nrsa1314 import NRSA1314ApiNamespace
 
 api = Namespace("nrsa1314", description=NRSA1314ApiNamespace.description)
 
@@ -63,7 +53,7 @@ class Sites(Resource):
     @api.marshal_with(points_feature)
     def get(self):
         """
-        Return all of the sites from the survey
+        Return PointsFeature of all the sites from the survey
         """
         connR = sqlite3.connect("/home/rick/testes.sqlite3")
 
@@ -81,14 +71,13 @@ class Sites(Resource):
         points = []
         for item in results:
             site_no, date, lon, lat = item
-            dd = dict(
+            dd = Feature(
                 properties=dict(site_id=site_no, date_collected=date),
                 geometry=Geoj_point((float(lon), float(lat))),
             )
             points.append(dd)
-        response = dict(features=points)
 
-        return response
+        return FeatureCollection(points)
 
 
 @api.route("/site/watersheds/<int:site_id>")

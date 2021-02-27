@@ -1,8 +1,6 @@
 from app.__init__ import create_app
 
 
-
-
 def run(host='127.0.0.1', port=4000):
     """
     Run RESTful API Server.
