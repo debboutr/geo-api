@@ -10,8 +10,9 @@ api_v1 = Api(
     version="1.0",
     title="NARS | FLASK-RESTPlus GeoAPI for the NARS Survey 2018",
     description=(
-        "This is a FLASK-RESPlus powered API with geospatial super power.\n\n"
-        "Checkout more at https://gis-ops.com or https://github.com/gis-ops\n"
+        "This is a [FLASK-RESTX](https://flask-restx.readthedocs.io/en/latest/)"
+        " powered API that is used to power visualizations in a coming vuejs project!.\n\n"
+        "Source code on [GitHub](https://github.com/debboutr/geo-api)\n"
     ),
 )
 
@@ -22,24 +23,11 @@ def create_app(flask_config_name=None, **kwargs):
     """
 
     # Initialize the Flask-App
-    app: Flask = Flask(__name__, **kwargs)
+    # app: Flask = Flask(__name__, **kwargs)
+    app = Flask(__name__)
 
     # Load the config file
     app.config.from_object("config.DevelopmentConfig")
-
-    DATABASE = "/home/rick/testes.sqlite3"
-
-    def get_db():
-        db = getattr(g, "_database", None)
-        if db is None:
-            db = g._database = sqlite3.connect(DATABASE)
-        return db
-
-    @app.teardown_appcontext
-    def close_connection(exception):
-        db = getattr(g, "_database", None)
-        if db is not None:
-            db.close()
 
     # Initialize FLASK-RESTPlus
     api_v1.init_app(app)
