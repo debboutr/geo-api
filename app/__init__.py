@@ -1,14 +1,9 @@
-# encoding: utf-8
-"""
-Example RESTful API Server.
-"""
-from flask import g
 from flask import Flask
 from flask_restx import Api
 
 api_v1 = Api(
     version="1.0",
-    title="NARS | FLASK-RESTPlus GeoAPI for the NARS Survey 2018",
+    title="NARS | FLASK-RESTX GeoAPI for the NARS Surveys",
     description=(
         "This is a [FLASK-RESTX](https://flask-restx.readthedocs.io/en/latest/)"
         " powered API that is used to power visualizations in a coming vuejs project!.\n\n"
