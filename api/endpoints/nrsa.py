@@ -1,17 +1,21 @@
-# encoding: utf-8
 import json
 import sqlite3
 
+# from sqlalchemy import text # TODO use this for string substitution
 from flask_restx import Namespace, Resource, abort, fields
 from geojson import Feature, FeatureCollection
 from geojson import Point as Geoj_point
 from geojson import Polygon as Geoj_polygon
 
-from app.modules.nrsa1314 import NRSA1314ApiNamespace
 
-api = Namespace("nrsa1314", description=NRSA1314ApiNamespace.description)
+ns = Namespace("nrsa1314", description=
+    ("data collected from survey sites in the National Aquatic "
+    "Resource Survey 2013-14\n "
+    "https://www.epa.gov/national-aquatic-resource-surveys/"
+    "national-rivers-and-streams-assessment-2013-2014-results")
+)
 
-point = api.model(
+point = ns.model(
     "PointGeometry",
     {
         "type": fields.String(required=True),
@@ -24,7 +28,7 @@ point = api.model(
     },
 )
 
-props = api.model(
+props = ns.model(
     "Properties",
     {
         "site_id": fields.String(required=True),
@@ -33,7 +37,7 @@ props = api.model(
     },
 )
 
-point_feature = api.model(
+point_feature = ns.model(
     "PointFeature",
     {
         "type": fields.String(required=True, default="Feature"),
@@ -42,7 +46,7 @@ point_feature = api.model(
     },
 )
 
-points_feature = api.model(
+points_feature = ns.model(
     "PointsFeature",
     {
         "type": fields.String(required=True, default="FeatureCollection"),
@@ -51,7 +55,7 @@ points_feature = api.model(
 )
 
 
-polygon = api.model(
+polygon = ns.model(
     "PolygonGeometry",
     {
         "type": fields.String(required=True, default="Polygon"),
@@ -70,7 +74,7 @@ polygon = api.model(
     },
 )
 
-polygon_feature = api.model(
+polygon_feature = ns.model(
     "PolygonFeature",
     {
         "type": fields.String(default="Feature", require=True),
@@ -79,9 +83,9 @@ polygon_feature = api.model(
 )
 
 
-@api.route("/site/points/")
+@ns.route("/site/points/")
 class Sites(Resource):
-    @api.marshal_with(points_feature)
+    @ns.marshal_with(points_feature)
     def get(self):
         """
         Return PointsFeature of all the sites from the survey
@@ -114,10 +118,10 @@ class Sites(Resource):
         return FeatureCollection(points)
 
 
-@api.route("/site/watersheds/<string:site_id>")
+@ns.route("/site/watersheds/<string:site_id>")
 class Watersheds(Resource):
 
-    # @api.marshal_with(polygon_feature)
+    # @ns.marshal_with(polygon_feature)
     def get(self, site_id):
         """
         Return a watershed for a given site.
@@ -137,3 +141,12 @@ class Watersheds(Resource):
         poly = json.loads(results[0])
 
         return FeatureCollection([Feature(geometry=poly)])
+
+
+@ns.route("/pickles")
+class Pickles(Resource):
+
+    def get(self):
+
+        # breakpoint()
+        return {"hello": "goodbye"}

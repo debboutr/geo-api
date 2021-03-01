@@ -1,13 +1,5 @@
-# encoding: utf-8
-
-"""
-RESTful API GeoAPI resources
---------------------------
-"""
-
 import geopy.distance
 import pyproj
-from app.modules.geoapi import GeoApiNamespace
 from flask import request
 from flask_restx import Namespace, Resource, abort
 from flask_restx import fields
@@ -17,9 +9,9 @@ from http import HTTPStatus
 from shapely.geometry import Polygon, LineString
 from shapely.ops import transform
 
-api = Namespace("recollect", description=GeoApiNamespace.description)
+ns = Namespace("workingonit")
 
-bounding_box = api.model(
+bounding_box = ns.model(
     "BoundingBox",
     {
         "x_lat": fields.Float(),
@@ -29,7 +21,7 @@ bounding_box = api.model(
     },
 )
 
-polygon = api.model(
+polygon = ns.model(
     "PolygonGeometry",
     {
         "type": fields.String(required=True, default="Polygon"),
@@ -48,7 +40,7 @@ polygon = api.model(
     },
 )
 
-polygon_feature = api.model(
+polygon_feature = ns.model(
     "PolygonFeature",
     {
         "type": fields.String(default="Feature", require=True),
@@ -56,7 +48,7 @@ polygon_feature = api.model(
     },
 )
 
-linestring = api.model(
+linestring = ns.model(
     "LineStringGeometry",
     {
         "type": fields.String(required=True, default="LineString"),
@@ -73,7 +65,7 @@ linestring = api.model(
     },
 )
 
-linestring_feature = api.model(
+linestring_feature = ns.model(
     "LineStringFeature",
     {
         "type": fields.String(default="Feature", require=True),
@@ -81,7 +73,7 @@ linestring_feature = api.model(
     },
 )
 
-point = api.model(
+point = ns.model(
     "PointGeometry",
     {
         "type": fields.String(required=True, default="Point"),
@@ -94,7 +86,7 @@ point = api.model(
     },
 )
 
-point_feature = api.model(
+point_feature = ns.model(
     "PointFeature",
     {
         "type": fields.String(default="Feature", require=True),
@@ -103,7 +95,7 @@ point_feature = api.model(
 )
 
 
-@api.route("/polygon/area/")
+@ns.route("/polygon/area/")
 class PolygonArea(Resource):
     """
     Return the area of a polygon in m²
@@ -112,8 +104,8 @@ class PolygonArea(Resource):
     def get(self):
         pass
 
-    # @api.expect(polygon_feature, validate=True)
-    @api.doc(id="polygon_area")
+    # @ns.expect(polygon_feature, validate=True)
+    @ns.doc(id="polygon_area")
     def post(self):
         """
         Return the area of a polygon in m²
@@ -141,21 +133,21 @@ class PolygonArea(Resource):
             )
 
 
-@api.route("/point/distance/")
-@api.param(
+@ns.route("/point/distance/")
+@ns.param(
     "start_lat", "Latitude of the start point e.g. 52.52624809700062", _in="query"
 )
-@api.param(
+@ns.param(
     "start_lng", "Longitude of the start point e.g. 13.4197998046875", _in="query"
 )
-@api.param("end_lat", "Latitude of the end point e.g. 52.50535544522142", _in="query")
-@api.param("end_lng", "Longitude of the end point e.g. 13.366928100585938", _in="query")
+@ns.param("end_lat", "Latitude of the end point e.g. 52.50535544522142", _in="query")
+@ns.param("end_lng", "Longitude of the end point e.g. 13.366928100585938", _in="query")
 class PointToPointDistance(Resource):
     """
     Return the distance in kilometers between two points.
     """
 
-    @api.doc(id="point_to_point_distance")
+    @ns.doc(id="point_to_point_distance")
     def get(self):
         """
         Return the distance in kilometers between two points.
@@ -187,14 +179,14 @@ class PointToPointDistance(Resource):
         )
 
 
-@api.route("/linestring/length/")
+@ns.route("/linestring/length/")
 class LinestringLength(Resource):
     """
     Return if the length in meter of a given GeoJSON LineString
     """
 
-    # @api.expect(linestring_feature, validate=True)
-    @api.doc(id="linestring_length")
+    # @ns.expect(linestring_feature, validate=True)
+    @ns.doc(id="linestring_length")
     def post(self):
         """
         Return if the length in meter of a given GeoJSON LineString
