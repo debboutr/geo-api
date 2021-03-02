@@ -5,6 +5,9 @@ import sqlite3
 from flask_restx import Namespace, Resource, abort, fields
 from geojson import Feature, FeatureCollection, Point
 
+from api.db import get_db
+
+
 ns = Namespace(
     "nrsa1314",
     description=(
@@ -127,7 +130,7 @@ class Sites(Resource):
         """
         Return PointsFeature of all the sites from the survey
         """
-        connR = sqlite3.connect("/home/rick/testes.sqlite3")
+        db = get_db()
 
         query = """
             select site_id,
@@ -138,7 +141,7 @@ class Sites(Resource):
             from nrsa1314_allcond
             limit 900;
             """
-        cursor = connR.execute(query)
+        cursor = db.execute(query)
         results = cursor.fetchall()
 
         points = []
@@ -163,9 +166,7 @@ class Site(Resource):
         """
         Return PointFeature with all attributes and bbox of a single site from the survey
         """
-        connR = sqlite3.connect("/home/rick/testes.sqlite3")
-        connR.enable_load_extension(True)
-        connR.execute("SELECT load_extension('mod_spatialite')")
+        db = get_db()
 
         query = """
             SELECT nrsa1314_allcond.site_id, nrsa1314_allcond.date_col, AsGeoJSON(Extent(wsheds_single_poly.geom))
@@ -173,8 +174,7 @@ class Site(Resource):
             INNER JOIN wsheds_single_poly
             ON nrsa1314_allcond.site_id=wsheds_single_poly.site_id and nrsa1314_allcond.site_id='{site}';
             """
-        print(query.format(site=site_id.strip()))
-        cursor = connR.execute(query.format(site=site_id.strip()))
+        cursor = db.execute(query.format(site=site_id.strip()))
         result = cursor.fetchone()
 
         if not result:
@@ -201,16 +201,14 @@ class Watersheds(Resource):
         NERM-1001_1_000_000 -- 0.97  -- size 542400
         LARM-1002_biggest -- 1.13  -- size 935138
         """
-        connR = sqlite3.connect("/home/rick/testes.sqlite3")
-        connR.enable_load_extension(True)
-        connR.execute("SELECT load_extension('mod_spatialite')")
+        db = get_db()
 
         query = """
                 select area_sqkm
                 from wsheds_single_poly
                 where site_id='{site}'
             """
-        result = connR.execute(query.format(site=site_id)).fetchone()
+        result = db.execute(query.format(site=site_id)).fetchone()
         if not result:
             abort(422, "Site ID does not exist in this survey")
 
@@ -228,7 +226,7 @@ class Watersheds(Resource):
                 from wsheds_single_poly
                 where site_id='{site}'
             """
-        cursor = connR.execute(
+        cursor = db.execute(
             query.format(spatial_function=spatial_function, site=site_id)
         )
         results = cursor.fetchone()
@@ -246,17 +244,15 @@ class Extent(Resource):
         """
         Return a watershed for a given site.
         """
-        connR = sqlite3.connect("/home/rick/testes.sqlite3")
-        connR.enable_load_extension(True)
-        connR.execute("SELECT load_extension('mod_spatialite')")
+        db = get_db()
 
         query = """
                 select AsGeoJSON(Extent(geom)) as wshed
                 from wsheds_single_poly
                 where site_id='LARM-1002'
             """
-        # cursor = connR.execute(query.format(site=site_id))
-        cursor = connR.execute(query)
+        # cursor = db.execute(query.format(site=site_id))
+        cursor = db.execute(query)
         results = cursor.fetchone()
         poly = json.loads(results[0])
 
