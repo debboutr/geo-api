@@ -7,7 +7,7 @@ from .geoloo import ns as geo
 blueprint = Blueprint("jerky", __name__)
 api_v1 = Api(
     blueprint,
-    version="1.0",
+    version="4.7",
     title="NARS | FLASK-RESTX GeoAPI for the NARS Surveys",
     description=(
         "This is a [FLASK-RESTX](https://flask-restx.readthedocs.io/en/latest/)"

@@ -86,10 +86,21 @@ point = ns.model(
     },
 )
 
+blue = ns.model(
+    "Recko",
+    {
+        "site_id": fields.String(required=True),
+        "basin_name": fields.String(required=True),
+        "date_collected": fields.String(required=True),
+    },
+)
+
+
 point_feature = ns.model(
-    "PointFeature",
+    "DeadMansBluff",
     {
         "type": fields.String(default="Feature", require=True),
+        "properties": fields.Nested(blue, required=True),
         "geometry": fields.Nested(point, required=True),
     },
 )
@@ -147,6 +158,7 @@ class PointToPointDistance(Resource):
     Return the distance in kilometers between two points.
     """
 
+    # @ns.expect(point_feature)
     @ns.doc(id="point_to_point_distance")
     def get(self):
         """
