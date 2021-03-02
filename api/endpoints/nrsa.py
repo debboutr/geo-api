@@ -174,8 +174,7 @@ class Site(Resource):
             INNER JOIN wsheds_single_poly
             ON nrsa1314_allcond.site_id=wsheds_single_poly.site_id and nrsa1314_allcond.site_id='{site}';
             """
-        cursor = db.execute(query.format(site=site_id.strip()))
-        result = cursor.fetchone()
+        result = db.execute(query.format(site=site_id.strip())).fetchone()
 
         if not result:
             abort(422, "Site ID does not exist in this survey")
@@ -226,11 +225,10 @@ class Watersheds(Resource):
                 from wsheds_single_poly
                 where site_id='{site}'
             """
-        cursor = db.execute(
+        result = db.execute(
             query.format(spatial_function=spatial_function, site=site_id)
-        )
-        results = cursor.fetchone()
-        poly = json.loads(results[0])
+        ).fetchone()
+        poly = json.loads(result[0])
 
         # return FeatureCollection([Feature(geometry=poly)])
         return Feature(geometry=poly)
@@ -252,8 +250,7 @@ class Extent(Resource):
                 where site_id='LARM-1002'
             """
         # cursor = db.execute(query.format(site=site_id))
-        cursor = db.execute(query)
-        results = cursor.fetchone()
-        poly = json.loads(results[0])
+        result = db.execute(query).fetchone()
+        poly = json.loads(result[0])
 
         return FeatureCollection([Feature(geometry=poly)])
