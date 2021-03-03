@@ -5,7 +5,7 @@ from .endpoints import blueprint
 def create_app():
 
     app = Flask(__name__, instance_relative_config=True)
-    app.register_blueprint(blueprint, url_prefix="/api")
+    app.register_blueprint(blueprint)
     app.config.from_pyfile("settings.py")
     app.config['RESTX_MASK_SWAGGER'] = False
 

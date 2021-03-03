@@ -1,7 +1,6 @@
 import json
 import sqlite3
 
-# from sqlalchemy import text # TODO use this for string substitution
 from flask_restx import Namespace, Resource, abort, fields
 from geojson import Feature, FeatureCollection, Point
 
