@@ -81,7 +81,7 @@ point = ns.model(
             fields.List(fields.Float, required=True, type="Array"),
             required=True,
             type="Array",
-            default=[13.421173095703125, 52.49532344352079],
+            example=[-108.4182, 36.75052],
         ),
     },
 )

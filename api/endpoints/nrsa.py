@@ -25,7 +25,7 @@ point = ns.model(
             fields.Float,
             required=True,
             type="Array",
-            default=[13.4197998046875, 52.52624809700062],
+            example=[-108.4182, 36.75052],
         ),
     },
 )
@@ -33,9 +33,68 @@ point = ns.model(
 props = ns.model(
     "Properties",
     {
-        "site_id": fields.String(required=True),
-        "basin_name": fields.String(required=True),
-        "date_collected": fields.String(required=True),
+        "SITE_ID": fields.String(required=True, description="Site Identification Code"),
+        "DATE_COL": fields.String(required=True, description="Date of Site Visit"),
+        "YEAR": fields.String(required=True, description="Year of Site Visit"),
+        "VISIT_NO": fields.String(required=True, description="Within Year Site Visit Number"),
+        "MAJ_BAS_NM": fields.String(required=True, description="Major USGS Hydrologic Basins derived from NHDPlus"),
+        "XCOORD": fields.String(required=True, description="x-coordinate from US Contiguous Albers Equal Area Conic projection"),
+        "YCOORD": fields.String(required=True, description="y-coordinate from US Contiguous Albers Equal Area Conic projection"),
+        "AG_ECO3_NM": fields.String(required=True, description="NARS 3-level reporting region Name"),
+        "AG_ECO9_NM": fields.String(required=True, description="NARS 9-level reporting region Name"),
+        "MISS_BASIN_NM": fields.String(required=True, description="Mississippi basin name"),
+        "FS_EW": fields.String(required=True, description="Eastern or western US Forest Service land"),
+        "EPA_REG": fields.String(required=True, description="EPA Region"),
+        "STRAH_CAT": fields.String(required=True, description="Strahler category used to classify reaches"),
+        "NARS_OWN": fields.String(required=True, description="Land ownership category used by NARS"),
+        "NRS13_EVAL": fields.String(required=True, description="NRSA 2013/14 site evaluation result"),
+        "NRS13_MDC": fields.String(required=True, description="Multi-density categories used in NRSA 2013/14 survey design within a stratum"),
+        "NRS13_PNL": fields.String(required=True, description="NRSA 2013/14 Panel Assignment"),
+        "NRS13_SF": fields.String(required=True, description="Lake included/excluded from NRSA 2013/14 survey design"),
+        "NRS13_STRA": fields.String(required=True, description="Strata used in NRSA 2013/14 survey design"),
+        "NRS13_TNT": fields.String(required=True, description="NRS 2013/14 target status assigned based on stream site evaluation for use in national assessments"),
+        "NRS13_URBN": fields.String(required=True, description="Stream site identified as an urban or non-urban stream. Source: https://www.census.gov/geo/maps-data/data/cbf/cbf_ua.html"),
+        "NRS13_VST": fields.String(required=True, description="Number of times NRSA 2013/14 site was actually sampled in 2013/14"),
+        "WGT_EXT_SP": fields.String(required=True, description="Length of sampled streams represented by site in km"),
+        "PUBLICATION_DATE": fields.String(required=True, description="Date of data file publication"),
+        "ANC_COND": fields.String(required=True, description=""),
+        "ANC": fields.String(required=True, description=""),
+        "DOC": fields.String(required=True, description=""),
+        "PH": fields.String(required=True, description=""),
+        "SAL_COND": fields.String(required=True, description=""),
+        "COND": fields.String(required=True, description=""),
+        "NTL_COND": fields.String(required=True, description=""),
+        "NTL_UG_L": fields.String(required=True, description=""),
+        "PTL_COND": fields.String(required=True, description=""),
+        "PTL": fields.String(required=True, description=""),
+        "BENT_MMI_COND": fields.String(required=True, description=""),
+        "MMI_BENT": fields.String(required=True, description=""),
+        "OE_SCORE": fields.String(required=True, description=""),
+        "OE_COND": fields.String(required=True, description=""),
+        "INSTRMCVR_COND": fields.String(required=True, description=""),
+        "L_XFC_NAT": fields.String(required=True, description=""),
+        "BEDSED_COND": fields.String(required=True, description=""),
+        "LRBS_USE": fields.String(required=True, description=""),
+        "RIPDIST_COND": fields.String(required=True, description=""),
+        "W1_HALL": fields.String(required=True, description=""),
+        "RIPVEG_COND": fields.String(required=True, description=""),
+        "L_XCMGW": fields.String(required=True, description=""),
+        "FISH_MMI_COND": fields.String(required=True, description=""),
+        "MMI_FISH": fields.String(required=True, description=""),
+        "ENT_1X_CCE_100ML": fields.String(required=True, description=""),
+        "ENT_1X_STV_COND": fields.String(required=True, description=""),
+        "MICX_COND": fields.String(required=True, description=""),
+        "MICX_RESULT": fields.String(required=True, description=""),
+        "MICX_MDL": fields.String(required=True, description=""),
+        "MICX_RL": fields.String(required=True, description=""),
+        "MICX_FLAG": fields.String(required=True, description=""),
+        "HG_COND": fields.String(required=True, description=""),
+        "MERCURY_RESULT": fields.String(required=True, description=""),
+        "MERCURY_MDL": fields.String(required=True, description=""),
+        "MERCURY_RL": fields.String(required=True, description=""),
+        "MERCURY_FLAG": fields.String(required=True, description=""),
+        "MERCURY_DATA_FLAG": fields.String(required=True, description=""),
+        "MERCURY_COMMENT": fields.String(required=True, description=""),
     },
 )
 
@@ -132,11 +191,7 @@ class Sites(Resource):
         db = get_db()
 
         query = """
-            select site_id,
-                date_col,
-                maj_bas_nm,
-                lon_dd83,
-                lat_dd83
+            select *
             from nrsa1314_allcond
             limit 900;
             """
@@ -145,12 +200,12 @@ class Sites(Resource):
 
         points = []
         for item in results:
-            site_no, date, basin_name, lon, lat = item
+            # site_no, date, basin_name, lon, lat = item
+            row = dict(item)
+            print(dict(item))
             dd = Feature(
-                properties=dict(
-                    site_id=site_no, basin_name=basin_name, date_collected=date
-                ),
-                geometry=Point((float(lon), float(lat))),
+                geometry=Point((float(row.pop("LON_DD83")), float(row.pop("LAT_DD83")))),
+                properties=row
             )
             points.append(dd)
 
