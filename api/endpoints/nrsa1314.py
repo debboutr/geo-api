@@ -112,7 +112,7 @@ class Watersheds(Resource):
 
         query = """
                 select area_sqkm
-                from wsheds_single_poly
+                from watersheds_1314
                 where site_id='{site}'
             """
         result = db.execute(query.format(site=site_id)).fetchone()
@@ -130,7 +130,7 @@ class Watersheds(Resource):
 
         query = """
                 select {spatial_function} as wshed
-                from wsheds_single_poly
+                from watersheds_1314
                 where site_id='{site}'
             """
         result = db.execute(
@@ -154,7 +154,7 @@ class Extent(Resource):
 
         query = """
                 select AsGeoJSON(Extent(geom)) as wshed
-                from wsheds_single_poly
+                from watersheds_1314
                 where site_id='LARM-1002'
             """
         # cursor = db.execute(query.format(site=site_id))
