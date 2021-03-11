@@ -4,7 +4,7 @@ from flask_restx import Namespace, Resource, abort, fields
 from geojson import Feature 
 
 from api.db import get_db
-from api.models import polygon_feature
+from api.models import multipolygon_feature
 
 # Region 9
 # Region 2
@@ -23,7 +23,7 @@ ns = Namespace(
 @ns.route("/region/<string:region_id>")
 class Region(Resource):
     """there needs to be a message here"""
-    @ns.marshal_with(polygon_feature)
+    @ns.marshal_with(multipolygon_feature)
     def get(self, region_id):
         """
         Return polygon of the EPA Region
