@@ -8,12 +8,12 @@ from api.db import get_db
 from api.models import points_feature, detail_0809_point_feature, linestring_feature
 
 ns = Namespace(
-    "nrsa0809",
+    "NRSA 2008-09",
     description=(
         "data collected from survey sites in the [National Aquatic "
-        "Resource Survey 2013-14]"
+        "Resource Survey 2008-09]"
         "(https://www.epa.gov/national-aquatic-resource-surveys/"
-        "national-rivers-and-streams-assessment-2013-2014-results)"
+        "national-rivers-and-streams-assessment-2008-2009-results)"
     ),
 )
 

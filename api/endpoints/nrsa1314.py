@@ -8,7 +8,7 @@ from api.db import get_db
 from api.models import points_feature, detail_1314_point_feature, linestring_feature
 
 ns = Namespace(
-    "nrsa1314",
+    "NRSA 2013-14",
     description=(
         "data collected from survey sites in the [National Aquatic "
         "Resource Survey 2013-14]"
