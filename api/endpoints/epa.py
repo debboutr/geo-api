@@ -14,7 +14,7 @@ from api.models import multipolygon_feature
 ns = Namespace(
     "EPA Regions",
     description=(
-        "EPA Region polygons collected [here](https://hifld-geoplatform."
+        "EPA Region polygons collected from [GeoPlatform](https://hifld-geoplatform."
         "opendata.arcgis.com/datasets/c670540796584c72b4f59b676ccabe6a_3)"
     ),
 )
@@ -40,7 +40,6 @@ class Region(Resource):
         if not result:
             abort(422, "Site ID does not exist in this survey")
         row = dict(result)
-        # print(dict(row))
         poly = json.loads(row["region"])
 
         return Feature(geometry=poly)

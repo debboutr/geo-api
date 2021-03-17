@@ -1,11 +1,12 @@
 import json
 
 from flask_restx import Namespace, Resource, abort, fields
-from geojson import Feature, FeatureCollection, Point
+from geojson import Feature, FeatureCollection, Point, MultiPolygon
 
 from api.db import get_db
+from api.utils.tolerance import find_tolerance
 
-from api.models import points_feature, detail_1314_point_feature, linestring_feature
+from api.models import points_feature, detail_1314_point_feature, linestring_feature, multipolygon_feature, polygon_feature
 
 ns = Namespace(
     "NRSA 2013-14",
@@ -16,17 +17,6 @@ ns = Namespace(
         "national-rivers-and-streams-assessment-2013-2014-results)"
     ),
 )
-
-
-def find_tolerance(area):
-    if area > 1_000_000:
-        return "0.005"
-    elif area > 10_000:
-        return "0.002"
-    elif area > 1_000:
-        return "0.001"
-    else:
-        None
 
 
 @ns.route("/points/")
@@ -40,7 +30,7 @@ class Sites(Resource):
 
         query = """
             select *
-            from nrsa1314_allcond
+            from sites_1314
             limit 900;
             """
         cursor = db.execute(query)
@@ -72,19 +62,17 @@ class Site(Resource):
         db = get_db()
 
         query = """
-            select *
-            from nrsa1314_allcond
+            select AsGeoJSON(sites.geom) as pt, sites.*
+            from sites_1314 as sites
             where site_id='{site}';
             """
         result = db.execute(query.format(site=site_id.strip())).fetchone()
-
         if not result:
             abort(422, "Site ID does not exist in this survey")
-        print(result)
         row = dict(result)
-        print(dict(row))
+        print(json.loads(row["pt"]))
         point = Feature(
-            geometry=Point((float(row.pop("LON_DD83")), float(row.pop("LAT_DD83")))),
+            geometry=json.loads(row["pt"]),
             properties=row,
         )
 
@@ -93,7 +81,7 @@ class Site(Resource):
 
 @ns.route("/watersheds/<string:site_id>")
 class Watersheds(Resource):
-    @ns.marshal_with(linestring_feature)
+
     def get(self, site_id):
         """
         Return a watershed for a given site.
@@ -112,7 +100,7 @@ class Watersheds(Resource):
 
         query = """
                 select area_sqkm
-                from watersheds_1314
+                from watershed_1314
                 where site_id='{site}'
             """
         result = db.execute(query.format(site=site_id)).fetchone()
@@ -123,23 +111,25 @@ class Watersheds(Resource):
 
         spatial_function = (
             # simplifying geom if area_sqkm > 1_000
-            f"AsGeoJSON(Simplify(ExteriorRing(geom), {tolerance}))"
+            f"AsGeoJSON(Simplify(geom, {tolerance}))"
             if tolerance
-            else "AsGeoJSON(ExteriorRing(geom))"
+            else "AsGeoJSON(geom)"
         )
 
         query = """
                 select {spatial_function} as wshed
-                from watersheds_1314
+                from watershed_1314
                 where site_id='{site}'
             """
         result = db.execute(
             query.format(spatial_function=spatial_function, site=site_id)
         ).fetchone()
-        poly = json.loads(result[0])
-
-        # return FeatureCollection([Feature(geometry=poly)])
-        return Feature(geometry=poly)
+        row = dict(result)
+        poly = json.loads(row["wshed"])
+        if poly["type"] == "Polygon":
+            return ns.marshal(Feature(geometry=poly), polygon_feature)
+        if poly["type"] == "MultiPolygon":
+            return ns.marshal(Feature(geometry=poly), multipolygon_feature)
 
 
 @ns.route("/watershed/extent/<string:site_id>")
@@ -154,7 +144,7 @@ class Extent(Resource):
 
         query = """
                 select AsGeoJSON(Extent(geom)) as wshed
-                from watersheds_1314
+                from watershed_1314
                 where site_id='LARM-1002'
             """
         # cursor = db.execute(query.format(site=site_id))

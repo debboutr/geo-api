@@ -4,6 +4,7 @@ from flask_restx import Namespace, Resource, abort, fields
 from geojson import Feature, FeatureCollection, Point
 
 from api.db import get_db
+from api.utils.tolerance import find_tolerance
 
 from api.models import points_feature, detail_0809_point_feature, linestring_feature
 
@@ -29,7 +30,7 @@ class Sites(Resource):
 
         query = """
             select *
-            from siteinfo_0809
+            from sites_0809
             limit 900;
             """
         cursor = db.execute(query)
@@ -60,7 +61,7 @@ class Site(Resource):
 
         query = """
             select *
-            from siteinfo_0809
+            from sites_0809
             where site_id='{site}';
             """
         result = db.execute(query.format(site=site_id.strip())).fetchone()

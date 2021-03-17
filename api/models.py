@@ -405,6 +405,38 @@ points_feature = ns.model(
 )
 
 
+polygon = ns.model(
+    "Polygon Geometry",
+    {
+        "type": fields.String(required=True, default="MultiPolygon"),
+        "coordinates": fields.List(
+            fields.List(
+                fields.List(fields.Float, required=True),
+                required=True,
+                type="Array",
+                default=[
+                    [-108.841593, 49.603365],
+                    [-108.806298, 49.573689],
+                    [-108.766716, 49.563465],
+                    [-108.771584, 49.556945],
+                    [-108.841593, 49.603365],
+                ],
+            ),
+            required=True,
+            type="Array",
+            default=[],
+        ),
+    },
+)
+
+polygon_feature = ns.model(
+    "Polygon Feature",
+    {
+        "type": fields.String(default="Feature", require=True),
+        "geometry": fields.Nested(polygon, required=True),
+    },
+)
+
 multipolygon = ns.model(
     "MultiPolygon Geometry",
     {
@@ -420,7 +452,7 @@ multipolygon = ns.model(
                         [-108.806298, 49.573689],
                         [-108.766716, 49.563465],
                         [-108.771584, 49.556945],
-                        [-108.841593, 49.603365]
+                        [-108.841593, 49.603365],
                     ],
                 ),
                 required=True,
