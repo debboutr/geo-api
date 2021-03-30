@@ -500,3 +500,150 @@ linestring_feature = ns.model(
         "geometry": fields.Nested(linestring, required=True),
     },
 )
+
+
+detail_props_0405 = ns.inherit(
+    "0405 Detail Feature Properties",
+    list_props,
+    {
+        "SITE_ID": fields.String(required=True, description="Site Identification Code"),
+        "YEAR": fields.String(required=True, description="Year of Site Visit"),
+        "VISIT_NO": fields.String(
+            required=True, description="Within Year Site Visit Number"
+        ),
+        "SITENAME": fields.String(required=True, description="Site Name"),
+        "SITETYPE": fields.String(
+            required=True,
+            description="Site Type (EMAP PROBablilty/EMAP/HAND-picked/STAR HAND-picked)",
+        ),
+        "REPEAT": fields.String(
+            required=True, description="Was this a Repeat Visit (Y/blank)"
+        ),
+        "LON_DD": fields.String(
+            required=True,
+            description="Official Longitude in Decimal Degrees equal to  DLON_DD, or MLON_DD, or XLON_DD",
+        ),
+        "LAT_DD": fields.String(
+            required=True,
+            description="Official Latitude in Decimal Degrees equal to  DLON_DD, or MLON_DD, or XLON_DD",
+        ),
+        "XLON_DD": fields.String(
+            required=True, description="X-site GPS Longitude - Decimal Degrees"
+        ),
+        "XLAT_DD": fields.String(
+            required=True, description="X-site GPS Latitude - Decimal Degrees"
+        ),
+        "STRAHLER": fields.String(
+            required=True, description="Strahler Order from RF3 Stream Data"
+        ),
+        "ST_ORDER": fields.String(
+            required=True, description="RF3 STRAHLER ORDER CLASS"
+        ),
+        "DATE_COL": fields.String(required=True, description="Date of Site Visit"),
+        "SITESAMP": fields.String(required=True, description="Was Site Sampled (Y/N)"),
+        "FLOWSITE": fields.String(
+            required=True,
+            description="Target Class of Site (WADEABLE/BOATABLE/INTERRUPTED/WADEABLE/PARTIAL WADEABLE/PARTIAL BOATABLE/ALTERED)",
+        ),
+        "XSTATUS": fields.String(
+            required=True, description="X-site Sampling Status Category"
+        ),
+        "VALXSTAT": fields.String(
+            required=True, description="X-site Sampling Status Sub-Category"
+        ),
+        "TNT": fields.String(
+            required=True,
+            description="Site is a target stream (perennial/wadeable) or a non-target site",
+        ),
+        "STRATUM": fields.String(
+            required=True, description="Stratum from the survey design for the site"
+        ),
+        "WGT_WSA": fields.String(
+            required=True,
+            description="Weight for statistical population estimation in km",
+        ),
+        "SAMPCHEM": fields.String(
+            required=True,
+            description="Chemistry Sample Collected - YES/NO/NA/PENDING ('NA'indicates chemistry sample lost or not analyzed)",
+        ),
+        "SAMPBENT": fields.String(
+            required=True,
+            description="Benthic Sample Collected - YES/NO/NA (NA indicates benthic sample low effort or not analyzed for WSA)",
+        ),
+        "SAMPPHAB": fields.String(
+            required=True, description="Physical Habitat Sample Collected - YES/PENDING"
+        ),
+        "STATE": fields.String(required=True, description="State"),
+        "COUNTY": fields.String(required=True, description="County"),
+        "EPAREGION": fields.String(required=True, description="EPA Region"),
+        "WESTEAST": fields.String(
+            required=True,
+            description="Site comes from EMAP-West (WEST) vs. WSA-east study (EAST)",
+        ),
+        "RT_WSA": fields.String(
+            required=True,
+            description="Reference Condition (ATH screen; R=Reference, S=Somewhat Disturbed, T=Highly Disturbed",
+        ),
+        "XELEV": fields.String(
+            required=True, description="Elevation at the X-site (m)"
+        ),
+        "WSAREA": fields.String(
+            required=True,
+            description="Watershed Area Digitized from Maps (km2). Local Watershed Area if INTERBASIN TRANSFERS Noted in IM Comment",
+        ),
+        "ECO3": fields.String(required=True, description="Omernik Level 3 Ecoregion"),
+        "ECO3_NM": fields.String(
+            required=True, description="Omernik Level 3 Ecoregion Name"
+        ),
+        "ECOWSA9": fields.String(
+            required=True, description="WSA Reporting Unit (9 aggregated ecoregions)"
+        ),
+        "ECOWSA3": fields.String(
+            required=True,
+            description="WSA Mega Reporting Unit (3 aggregated ecoregions)",
+        ),
+        "NAECO3": fields.String(
+            required=True, description="North American Level 3 Ecoregion code"
+        ),
+        "NAECO2": fields.String(
+            required=True, description="North American Level 2 Ecoregion code"
+        ),
+        "NAECO2_NM": fields.String(
+            required=True, description="North American Level 2 Ecoregion Name"
+        ),
+        "NAECO1": fields.String(
+            required=True, description="North American Level 1 Ecoregion code"
+        ),
+        "ECOREPORT": fields.String(
+            required=True, description="Aggregated NAECO2 Name used for reporting"
+        ),
+        "HUC2": fields.String(
+            required=True, description="2-digit HUC Catalog Unit Number"
+        ),
+        "HUC4": fields.String(
+            required=True, description="4-digit HUC Catalog Unit Number"
+        ),
+        "HUC6": fields.String(
+            required=True, description="6-digit HUC Catalog Unit Number"
+        ),
+        "HUC8": fields.String(
+            required=True, description="8-digit HUC Catalog Unit Number"
+        ),
+        "HUC8_NM": fields.String(required=True, description="HUC Catalog Unit Name"),
+        "IM_FLAG": fields.String(
+            required=True, description="Flag assigned during data validation"
+        ),
+        "IM_COMMENT": fields.String(
+            required=True, description="Comments regarding data validation"
+        ),
+    },
+)
+
+detail_0405_point_feature = ns.model(
+    "0405 Point Feature",
+    {
+        "type": fields.String(required=True, default="Feature"),
+        "geometry": fields.Nested(point, required=True),
+        "properties": fields.Nested(detail_props_0405),
+    },
+)

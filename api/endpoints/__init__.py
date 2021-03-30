@@ -3,6 +3,7 @@ from flask_restx import Api, fields
 
 from .epa import ns as epa
 # from .geoloo import ns as geo
+from .nrsa0405 import ns as nrsa0405
 from .nrsa0809 import ns as nrsa0809
 from .nrsa1314 import ns as nrsa1314
 from api.models import ns as models
@@ -21,8 +22,9 @@ api_v1 = Api(
 )
 
 api_v1.add_namespace(models)
-api_v1.add_namespace(nrsa1314, path="/nrsa1314")
+api_v1.add_namespace(nrsa0405, path="/nrsa0405")
 api_v1.add_namespace(nrsa0809, path="/nrsa0809")
+api_v1.add_namespace(nrsa1314, path="/nrsa1314")
 # api_v1.add_namespace(geo, path="/geo")
 api_v1.add_namespace(epa, path="/epa")
 

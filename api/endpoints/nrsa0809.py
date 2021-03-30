@@ -84,7 +84,8 @@ class Site(Resource):
 
 @ns.route("/watersheds/<string:site_id>")
 class Watersheds(Resource):
-    # @ns.marshal_with(linestring_feature)
+
+    @ns.marshal_with(polygon_feature)
     def get(self, site_id):
         """
         Return a watershed for a given site.
