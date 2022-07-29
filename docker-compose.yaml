@@ -1,0 +1,10 @@
+services:
+    app:
+      build: .
+      image: nrsa:latest
+      container_name: nars
+      command: gunicorn -w 3 -b 0.0.0.0:5000 api:create_app()
+      ports:
+        - 5000:5000
+      volumes:
+        - .:/app
