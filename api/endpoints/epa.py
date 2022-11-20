@@ -1,7 +1,7 @@
 import json
 
 from flask_restx import Namespace, Resource, abort, fields
-from geojson import Feature 
+from geojson import Feature
 
 from api.db import get_db
 from api.models import multipolygon_feature
@@ -20,9 +20,42 @@ ns = Namespace(
 )
 
 
+@ns.route("/regions/")
+class Regions(Resource):
+    @ns.marshal_with(multipolygon_feature)
+    def get(self):
+        """
+        Return all EPA regions in CONUS
+        """
+        db = get_db()
+
+        query = """
+            select *
+            from epa_regions;
+            """
+        cursor = db.execute(query)
+        results = cursor.fetchall()
+
+        regions = []
+        for item in results:
+            row = dict(item)
+            import pdb
+
+            pdb.set_trace()
+
+            dd = Feature(
+                geometry=json.loads(row["geom"]),
+                properties=row,
+            )
+            regions.append(dd)
+
+        return FeatureCollection(regions)
+
+
 @ns.route("/region/<string:region_id>")
 class Region(Resource):
     """there needs to be a message here"""
+
     @ns.marshal_with(multipolygon_feature)
     def get(self, region_id):
         """

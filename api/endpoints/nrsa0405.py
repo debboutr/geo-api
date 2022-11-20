@@ -4,15 +4,14 @@ from flask_restx import Namespace, Resource, abort, fields
 from geojson import Feature, FeatureCollection, Point
 
 from api.db import get_db
-from api.utils.tolerance import find_tolerance
-
 from api.models import (
-    points_feature,
     detail_0405_point_feature,
     linestring_feature,
-    polygon_feature,
     multipolygon_feature,
+    points_feature,
+    polygon_feature,
 )
+from api.utils.tolerance import find_tolerance
 
 ns = Namespace(
     "NRSA 2004-05",
@@ -45,7 +44,7 @@ class Sites(Resource):
         for item in results:
             row = dict(item)
             dd = Feature(
-                geometry=Point((float(row.pop("LON_DD")), float(row.pop("LAT_DD")))),
+                geometry=Point((float(row.pop("LAT_DD")), float(row.pop("LON_DD")))),
                 properties=row,
             )
             points.append(dd)
@@ -73,7 +72,7 @@ class Site(Resource):
             abort(422, "Site ID does not exist in this survey")
         row = dict(result)
         point = Feature(
-            geometry=Point((float(row["LON_DD"]), float(row["LAT_DD"]))),
+            geometry=Point((float(row["LAT_DD"]), float(row["LON_DD"]))),
             properties=row,
         )
 

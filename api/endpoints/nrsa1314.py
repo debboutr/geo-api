@@ -1,18 +1,17 @@
 import json
 
 from flask_restx import Namespace, Resource, abort, fields
-from geojson import Feature, FeatureCollection, Point, MultiPolygon
+from geojson import Feature, FeatureCollection, MultiPolygon, Point
 
 from api.db import get_db
-from api.utils.tolerance import find_tolerance
-
 from api.models import (
-    points_feature,
     detail_1314_point_feature,
     linestring_feature,
     multipolygon_feature,
+    points_feature,
     polygon_feature,
 )
+from api.utils.tolerance import find_tolerance
 
 ns = Namespace(
     "NRSA 2013-14",
@@ -58,7 +57,7 @@ class Sites(Resource):
 
             data = Feature(
                 geometry=Point(
-                    (float(row.pop("LON_DD83")), float(row.pop("LAT_DD83")))
+                    (float(row.pop("LAT_DD83")), float(row.pop("LON_DD83")))
                 ),
                 properties=row,
             )
@@ -86,7 +85,7 @@ class Site(Resource):
             abort(422, "Site ID does not exist in this survey")
         row = dict(result)
         point = Feature(
-            geometry=json.loads(row["pt"]),
+            geometry=Point((float(row.pop("LAT_DD83")), float(row.pop("LON_DD83")))),
             properties=row,
         )
 
@@ -95,7 +94,6 @@ class Site(Resource):
 
 @ns.route("/watersheds/<string:site_id>")
 class Watersheds(Resource):
-
     @ns.marshal_with(polygon_feature)
     def get(self, site_id):
         """

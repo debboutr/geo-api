@@ -1,6 +1,5 @@
 from flask_restx import Namespace, fields
 
-
 ns = Namespace("models")
 
 
