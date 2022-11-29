@@ -45,7 +45,7 @@ class Sites(Resource):
             row = dict(item)
             dd = Feature(
                 geometry=Point(
-                    (float(row.pop("LAT_DD83")), float(row.pop("LON_DD83")))
+                    (float(row.pop("LON_DD83")), float(row.pop("LAT_DD83")))
                 ),
                 properties=row,
             )
@@ -74,7 +74,7 @@ class Site(Resource):
             abort(422, "Site ID does not exist in this survey")
         row = dict(result)
         point = Feature(
-            geometry=Point((float(row.pop("LAT_DD83")), float(row.pop("LON_DD83")))),
+            geometry=Point((float(row.pop("LON_DD83")), float(row.pop("LAT_DD83")))),
             properties=row,
         )
 
