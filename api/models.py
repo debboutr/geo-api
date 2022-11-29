@@ -22,6 +22,7 @@ list_props = ns.model(
     "List Feature Properties",
     {
         "SITE_ID": fields.String(required=True, description="Site Identification Code"),
+        "COMID": fields.String(required=True, description="COMID of site's catchment"),
         "DATE_COL": fields.String(required=True, description="Date of Site Visit"),
         "YEAR": fields.String(required=True, description="Year of Site Visit"),
         "VISIT_NO": fields.String(
@@ -644,5 +645,40 @@ detail_0405_point_feature = ns.model(
         "type": fields.String(required=True, default="Feature"),
         "geometry": fields.Nested(point, required=True),
         "properties": fields.Nested(detail_props_0405),
+    },
+)
+
+
+nlcd_category = ns.model(
+    "NLCD Categories",
+    {
+        "PctOwWs": fields.Float,
+        "PctIceWs": fields.Float,
+        "PctUrbOpWs": fields.Float,
+        "PctUrbLoWs": fields.Float,
+        "PctUrbMdWs": fields.Float,
+        "PctUrbHiWs": fields.Float,
+        "PctBlWs": fields.Float,
+        "PctDecidWs": fields.Float,
+        "PctConifWs": fields.Float,
+        "PctMxFstWs": fields.Float,
+        "PctShrbWs": fields.Float,
+        "PctGrsWs": fields.Float,
+        "PctHayWs": fields.Float,
+        "PctCropWs": fields.Float,
+        "PctWdWetWs": fields.Float,
+        "PctHbWetWs": fields.Float,
+    },
+)
+
+
+nlcd_feature = ns.model(
+    "NLCD Feature Properties",
+    {
+        "SITE_ID": fields.String(read_only=True),
+        "COMID": fields.Integer,
+        "WsAreaSqKm": fields.Float,
+        "WsPctFull": fields.Float,
+        "categories": fields.Nested(nlcd_category, required=True),
     },
 )

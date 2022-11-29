@@ -4,6 +4,7 @@ from flask_restx import Api, fields
 from api.models import ns as models
 
 from .epa import ns as epa
+from .nlcd import ns as nlcd
 
 # from .geoloo import ns as geo
 from .nrsa0405 import ns as nrsa0405
@@ -14,7 +15,7 @@ blueprint = Blueprint("jerky", __name__)
 api_v1 = Api(
     blueprint,
     version="0.4.7",
-    title="GeoAPI for National Aquatic Resource Surveys and other water resources",
+    title="GeoAPI for National Aquatic Resource Surveys",
     description=(
         "This is a [FLASK-RESTX](https://flask-restx.readthedocs.io/en/latest/)"
         " powered API that is used to power visualizations in a coming vuejs project!.\n\n"
@@ -29,3 +30,4 @@ api_v1.add_namespace(nrsa0809, path="/nrsa0809")
 api_v1.add_namespace(nrsa1314, path="/nrsa1314")
 # api_v1.add_namespace(geo, path="/geo")
 api_v1.add_namespace(epa, path="/epa")
+api_v1.add_namespace(nlcd, path="/nlcd")
