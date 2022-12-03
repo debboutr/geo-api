@@ -132,3 +132,36 @@ class Extent(Resource):
         poly = json.loads(dict(result)["wshed"])
 
         return Feature(geometry=poly)
+
+
+@ns.route("/nearest/<string:lat>/<string:lon>/")
+class Nearest(Resource):
+    @ns.marshal_with(points_feature)
+    def get(self, lat, lon):
+        """
+        Return closest 10 PointFeatures to the latlng provided
+        """
+        db = get_db()
+        query = """
+            select *
+            from sites_1314
+            ORDER by ST_Distance(geom, ST_GeomFromText('POINT({lon} {lat})', 4326))
+            limit 10;
+            """
+        cursor = db.execute(query.format(lat=lat, lon=lon))
+        results = cursor.fetchall()
+        if not results:
+            abort(422, "Can't find any points close to one provided")
+
+        points = []
+        for item in results:
+            row = dict(item)
+            dd = Feature(
+                geometry=Point(
+                    (float(row.pop("LON_DD83")), float(row.pop("LAT_DD83")))
+                ),
+                properties=row,
+            )
+            points.append(dd)
+
+        return FeatureCollection(points)
