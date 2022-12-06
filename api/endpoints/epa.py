@@ -4,7 +4,7 @@ from flask_restx import Namespace, Resource, abort, fields
 from geojson import FeatureCollection, Feature
 
 from api.db import get_db
-from api.models import multipolygon_feature, polygon_feature 
+from api.models import multipolygon_feature, polygon_feature, multipolygon_collection
 
 ns = Namespace(
     "EPA Regions",
@@ -17,7 +17,7 @@ ns = Namespace(
 
 @ns.route("/regions/")
 class Regions(Resource):
-    @ns.marshal_with(multipolygon_feature)
+    @ns.marshal_with(multipolygon_collection)
     def get(self):
         """
         Return all EPA regions in CONUS
@@ -40,7 +40,10 @@ class Regions(Resource):
                 properties=row,
             )
             regions.append(dd)
-        # print(regions[0].keys())
+        print(regions[0].keys())
+        print(regions[0]["geometry"].keys())
+        print(FeatureCollection(regions).keys())
+        print(FeatureCollection(regions)["features"][0].keys())
 
         return FeatureCollection(regions)
 
