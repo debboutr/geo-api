@@ -6,7 +6,7 @@ def test_home_page(client):
     response = client.get("/")
     assert response.status_code == 200
     assert (
-        b"GeoAPI for National Aquatic Resource Surveys and other water resources"
+        b"GeoAPI for National Aquatic Resource Surveys"
         in response.data
     )
 

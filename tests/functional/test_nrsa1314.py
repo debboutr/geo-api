@@ -9,14 +9,16 @@ def test_1314_points(client):
     assert list(data.keys()) == ["type", "features"]
     assert data["type"] == "FeatureCollection"
     assert type(data["features"]) == list
-    assert len(data["features"]) == 1853
+    assert len(data["features"]) == 1852
     feature = data["features"][0]
     assert list(feature.keys()) == ["type", "properties", "geometry"]
     assert feature["type"] == "Feature"
     assert list(feature["properties"].keys()) == [
         "SITE_ID",
+        "COMID",
         "DATE_COL",
         "YEAR",
+        "WSAREASQKM",
         "VISIT_NO",
     ]
 

@@ -14,5 +14,6 @@ RUN pip install --no-cache-dir --upgrade -r requirements.txt
 # THE BELOW WILL BE COVERED BY THE ARGS IN THE docker-compose.yaml FILE!
 COPY . /app
 
-CMD ["pytest","."]
+RUN py.test -vv
+#CMD ["pytest","."]
 # CMD ["flask","run","--host","0.0.0.0","--port","5000"]
