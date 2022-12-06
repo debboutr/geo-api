@@ -43,7 +43,7 @@ def test_0405_watersheds(client):
     response = client.get(f"/nrsa0405/watersheds/{site_id}")
     assert response.status_code == 200
     data = json.loads(response.data)
-    assert list(data.keys()) == ["type", "geometry"]
+    assert list(data.keys()) == ["type", "properties", "geometry"]
     assert data["type"] == "Feature"
     assert list(data["geometry"].keys()) == ["type", "coordinates"]
     assert data["geometry"]["type"] == "Polygon"

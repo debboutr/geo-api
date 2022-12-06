@@ -430,10 +430,18 @@ polygon = ns.model(
     },
 )
 
+epa_props = ns.model(
+    "EPA Region Properties",
+    {
+        "EPAREGION": fields.String(required=True, description="Site Identification Code"),
+    },
+)
+
 polygon_feature = ns.model(
     "Polygon Feature",
     {
         "type": fields.String(default="Feature", require=True),
+        "properties": fields.Nested(epa_props),
         "geometry": fields.Nested(polygon, required=True),
     },
 )
@@ -472,6 +480,7 @@ multipolygon_feature = ns.model(
     {
         "type": fields.String(default="Feature", require=True),
         "geometry": fields.Nested(multipolygon, required=True),
+        "properties": fields.Nested(epa_props),
     },
 )
 

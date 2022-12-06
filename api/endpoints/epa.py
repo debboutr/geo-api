@@ -1,15 +1,10 @@
 import json
 
 from flask_restx import Namespace, Resource, abort, fields
-from geojson import Feature
+from geojson import FeatureCollection, Feature
 
 from api.db import get_db
-from api.models import multipolygon_feature
-
-# Region 9
-# Region 2
-# Region 4
-# Region 10
+from api.models import multipolygon_feature, polygon_feature 
 
 ns = Namespace(
     "EPA Regions",
@@ -30,7 +25,7 @@ class Regions(Resource):
         db = get_db()
 
         query = """
-            select *
+            select EPAREGION,  AsGeoJSON(geom) as region
             from epa_regions;
             """
         cursor = db.execute(query)
@@ -39,15 +34,13 @@ class Regions(Resource):
         regions = []
         for item in results:
             row = dict(item)
-            import pdb
-
-            pdb.set_trace()
 
             dd = Feature(
-                geometry=json.loads(row["geom"]),
+                geometry=json.loads(row["region"]),
                 properties=row,
             )
             regions.append(dd)
+        # print(regions[0].keys())
 
         return FeatureCollection(regions)
 
@@ -56,7 +49,7 @@ class Regions(Resource):
 class Region(Resource):
     """there needs to be a message here"""
 
-    @ns.marshal_with(multipolygon_feature)
+    @ns.marshal_with(polygon_feature)
     def get(self, region_id):
         """
         Return polygon of the EPA Region
@@ -64,7 +57,7 @@ class Region(Resource):
         db = get_db()
 
         query = """
-            select AsGeoJSON(geom) as region
+            select EPAREGION,  AsGeoJSON(geom) as region
             from epa_regions
             where objectid='{oid}';
             """
@@ -75,4 +68,4 @@ class Region(Resource):
         row = dict(result)
         poly = json.loads(row["region"])
 
-        return Feature(geometry=poly)
+        return Feature(geometry=poly, properties=row)
