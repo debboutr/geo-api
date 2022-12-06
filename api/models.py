@@ -25,6 +25,7 @@ list_props = ns.model(
         "COMID": fields.String(required=True, description="COMID of site's catchment"),
         "DATE_COL": fields.String(required=True, description="Date of Site Visit"),
         "YEAR": fields.String(required=True, description="Year of Site Visit"),
+        "WSAREASQKM": fields.String(required=True, description="Area of the Watershed of the site"),
         "VISIT_NO": fields.String(
             required=True, description="Within Year Site Visit Number"
         ),
@@ -680,5 +681,18 @@ nlcd_feature = ns.model(
         "WsAreaSqKm": fields.Float,
         "WsPctFull": fields.Float,
         "categories": fields.Nested(nlcd_category, required=True),
+    },
+)
+
+category_feature = ns.model(
+    "NLCD Feature Properties",
+    {
+        "2001": fields.Float,
+        "2004": fields.Float,
+        "2006": fields.Float,
+        "2011": fields.Float,
+        "2013": fields.Float,
+        "2016": fields.Float,
+        "2019": fields.Float,
     },
 )
