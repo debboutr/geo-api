@@ -669,7 +669,7 @@ detail_0405_point_feature = ns.model(
 
 
 nlcd_category = ns.model(
-    "NLCD Categories",
+    "NLCD Feature Categories",
     {
         "PctOwWs": fields.Float,
         "PctIceWs": fields.Float,
@@ -695,7 +695,7 @@ nlcd_feature = ns.model(
     "NLCD Feature Properties",
     {
         "SITE_ID": fields.String(read_only=True),
-        "COMID": fields.Integer,
+        "COMID": fields.Integer(desciption="Unique ID of NHDPlusV2 catchment that SITE_ID is found"),
         "WsAreaSqKm": fields.Float,
         "WsPctFull": fields.Float,
         "categories": fields.Nested(nlcd_category, required=True),
@@ -703,7 +703,7 @@ nlcd_feature = ns.model(
 )
 
 category_feature = ns.model(
-    "NLCD Feature Properties",
+    "NLCD Yearly Category",
     {
         "2001": fields.Float,
         "2004": fields.Float,
