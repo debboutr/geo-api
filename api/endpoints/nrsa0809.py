@@ -1,17 +1,14 @@
 import json
 
-from flask_restx import Namespace, Resource, abort, fields
+from flask_restx import Namespace, Resource, abort
 from geojson import Feature, FeatureCollection, Point
 
 from api.db import get_db
 from api.models import (
     detail_0809_point_feature,
-    linestring_feature,
-    multipolygon_feature,
     points_feature,
     polygon_feature,
 )
-from api.utils.tolerance import find_tolerance
 
 ns = Namespace(
     "NRSA 2008-09",

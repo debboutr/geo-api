@@ -1,17 +1,14 @@
 import json
 
-from flask_restx import Namespace, Resource, abort, fields
-from geojson import Feature, FeatureCollection, MultiPolygon, Point
+from flask_restx import Namespace, Resource, abort
+from geojson import Feature, FeatureCollection, Point
 
 from api.db import get_db
 from api.models import (
     detail_1314_point_feature,
-    linestring_feature,
-    multipolygon_feature,
     points_feature,
     polygon_feature,
 )
-from api.utils.tolerance import find_tolerance
 
 ns = Namespace(
     "NRSA 2013-14",
@@ -47,14 +44,7 @@ class Sites(Resource):
 
         points = []
         for item in results:
-            # site_no, date, basin_name, lon, lat = item
             row = dict(item)
-            # geometry=json.loads(row.pop("pt"))
-            # data = Feature(
-            #         geometry=geometry,
-            #         properties=row,
-            # )
-
             data = Feature(
                 geometry=Point(
                     (float(row.pop("LON_DD83")), float(row.pop("LAT_DD83")))

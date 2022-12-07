@@ -1,17 +1,14 @@
 import json
 
-from flask_restx import Namespace, Resource, abort, fields
+from flask_restx import Namespace, Resource, abort
 from geojson import Feature, FeatureCollection, Point
 
 from api.db import get_db
 from api.models import (
     detail_0405_point_feature,
-    linestring_feature,
-    multipolygon_feature,
     points_feature,
     polygon_feature,
 )
-from api.utils.tolerance import find_tolerance
 
 ns = Namespace(
     "NRSA 2004-05",
@@ -26,6 +23,7 @@ ns = Namespace(
 
 @ns.route("/points/")
 class Sites(Resource):
+    #@ns.doc(responses={403: "Not Authorized"})
     @ns.marshal_with(points_feature)
     def get(self):
         """
@@ -53,6 +51,7 @@ class Sites(Resource):
 
 
 @ns.route("/point/<string:site_id>")
+@ns.doc(params={"site_id": "Unique ID of survey site, ex. VAEQ99-0481"})
 class Site(Resource):
     @ns.marshal_with(detail_0405_point_feature)
     def get(self, site_id):

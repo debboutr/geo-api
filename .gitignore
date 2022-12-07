@@ -5,3 +5,4 @@ instance/
 .flaskenv
 NRSA/
 geo.db
+venv*
