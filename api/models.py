@@ -653,6 +653,14 @@ nlcd_category = ns.model(
     },
 )
 
+chart_category = ns.model(
+    "NLCD Chart Category",
+    {
+        "category": fields.String,
+        "start": fields.Float,
+        "width": fields.Float,
+    },
+)
 
 nlcd_feature = ns.model(
     "NLCD Feature Properties",
@@ -663,6 +671,22 @@ nlcd_feature = ns.model(
         "WsPctFull": fields.Float,
         "categories": fields.Nested(nlcd_category, required=True),
     },
+)
+
+compare_year = ns.model(
+        "NLCD Year Categories",
+        {
+            "year": fields.String(),
+            "categories": fields.List(fields.Nested(chart_category, required=True)),
+            }
+)
+
+compare_feature = ns.model(
+        "NLCD Comparable Categories",
+        {
+            "comparable": fields.List(fields.Nested(compare_year), required=True),
+            "square_list": fields.List(fields.String())
+            }
 )
 
 category_feature = ns.model(
