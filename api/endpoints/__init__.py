@@ -13,7 +13,9 @@ api_v1 = Api(
     title="GeoAPI for National Aquatic Resource Surveys",
     description=(
         "This is a [FLASK-RESTX](https://flask-restx.readthedocs.io/en/latest/)"
-        " powered API that is used to power visualizations in a coming vuejs project!.\n\n"
+        " powered API that is used to power visualizations in this "
+        "[vuejs project](http://nars.debbout.info)!.\n\n"
+        "Here is a link to the EPA's National Aquatic Resource Survey data "
         "[NARS](https://www.epa.gov/national-aquatic-resource-surveys)\n\n"
         "Source code on [GitHub](https://github.com/debboutr/geo-api)\n"
     ),

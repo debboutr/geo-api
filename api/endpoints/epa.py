@@ -4,7 +4,7 @@ from flask_restx import Namespace, Resource, abort, fields
 from geojson import FeatureCollection, Feature
 
 from api.db import get_db
-from api.models import multipolygon_feature, polygon_feature, multipolygon_collection
+from api.models import polygon_feature, multipolygon_collection
 
 ns = Namespace(
     "EPA Regions",

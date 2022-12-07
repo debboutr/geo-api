@@ -484,43 +484,6 @@ multipolygon_collection = ns.model(
 )
 
 
-multipolygon_feature = ns.model(
-    "MultiPolygon Feature",
-    {
-        "type": fields.String(default="Feature", require=True),
-        "geometry": fields.Nested(multipolygon, required=True),
-        "properties": fields.Nested(epa_props),
-    },
-)
-
-
-linestring = ns.model(
-    "Line String Geometry",
-    {
-        "type": fields.String(required=True, default="LineString"),
-        "coordinates": fields.List(
-            fields.List(fields.Float, required=True, type="Array"),
-            required=True,
-            type="Array",
-            default=[
-                [-108.841593, 49.603365],
-                [-108.806298, 49.573689],
-                [-108.766716, 49.563465],
-                [-108.771584, 49.556945],
-            ],
-        ),
-    },
-)
-
-linestring_feature = ns.model(
-    "Line String Feature",
-    {
-        "type": fields.String(default="Feature", require=True),
-        "geometry": fields.Nested(linestring, required=True),
-    },
-)
-
-
 detail_props_0405 = ns.inherit(
     "0405 Detail Feature Properties",
     list_props,
@@ -714,3 +677,13 @@ category_feature = ns.model(
         "2019": fields.Float,
     },
 )
+
+
+#  multipolygon_feature = ns.model(
+#      "MultiPolygon Feature",
+#      {
+#          "type": fields.String(default="Feature", require=True),
+#          "geometry": fields.Nested(multipolygon, required=True),
+#          "properties": fields.Nested(epa_props),
+#      },
+#  )
