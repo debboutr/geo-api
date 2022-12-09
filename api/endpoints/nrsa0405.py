@@ -4,11 +4,7 @@ from flask_restx import Namespace, Resource, abort
 from geojson import Feature, FeatureCollection, Point
 
 from api.db import get_db
-from api.models import (
-    detail_0405_point_feature,
-    points_feature,
-    polygon_feature,
-)
+from api.models import detail_0405_point_feature, points_feature, polygon_feature
 
 ns = Namespace(
     "NRSA 2004-05",
@@ -23,7 +19,7 @@ ns = Namespace(
 
 @ns.route("/points/")
 class Sites(Resource):
-    #@ns.doc(responses={403: "Not Authorized"})
+    # @ns.doc(responses={403: "Not Authorized"})
     @ns.marshal_with(points_feature)
     def get(self):
         """

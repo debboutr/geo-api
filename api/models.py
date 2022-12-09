@@ -25,7 +25,9 @@ list_props = ns.model(
         "COMID": fields.String(required=True, description="COMID of site's catchment"),
         "DATE_COL": fields.String(required=True, description="Date of Site Visit"),
         "YEAR": fields.String(required=True, description="Year of Site Visit"),
-        "WSAREASQKM": fields.String(required=True, description="Area of the Watershed of the site"),
+        "WSAREASQKM": fields.String(
+            required=True, description="Area of the Watershed of the site"
+        ),
         "VISIT_NO": fields.String(
             required=True, description="Within Year Site Visit Number"
         ),
@@ -433,7 +435,9 @@ polygon = ns.model(
 epa_props = ns.model(
     "EPA Region Properties",
     {
-        "EPAREGION": fields.String(required=True, description="Site Identification Code"),
+        "EPAREGION": fields.String(
+            required=True, description="Site Identification Code"
+        ),
     },
 )
 
@@ -479,7 +483,7 @@ multipolygon_collection = ns.model(
     "MultiPolygon Feature Collection",
     {
         "type": fields.String(default="Feature", require=True),
-        "features": fields.Nested(polygon_feature , required=True),
+        "features": fields.Nested(polygon_feature, required=True),
     },
 )
 
@@ -666,7 +670,9 @@ nlcd_feature = ns.model(
     "NLCD Feature Properties",
     {
         "SITE_ID": fields.String(read_only=True),
-        "COMID": fields.Integer(desciption="Unique ID of NHDPlusV2 catchment that SITE_ID is found"),
+        "COMID": fields.Integer(
+            desciption="Unique ID of NHDPlusV2 catchment that SITE_ID is found"
+        ),
         "WsAreaSqKm": fields.Float,
         "WsPctFull": fields.Float,
         "categories": fields.Nested(nlcd_category, required=True),
@@ -674,19 +680,19 @@ nlcd_feature = ns.model(
 )
 
 compare_year = ns.model(
-        "NLCD Year Categories",
-        {
-            "year": fields.String(),
-            "categories": fields.List(fields.Nested(chart_category, required=True)),
-            }
+    "NLCD Year Categories",
+    {
+        "year": fields.String(),
+        "categories": fields.List(fields.Nested(chart_category, required=True)),
+    },
 )
 
 compare_feature = ns.model(
-        "NLCD Comparable Categories",
-        {
-            "comparable": fields.List(fields.Nested(compare_year), required=True),
-            "square_list": fields.List(fields.String())
-            }
+    "NLCD Comparable Categories",
+    {
+        "comparable": fields.List(fields.Nested(compare_year), required=True),
+        "square_list": fields.List(fields.String()),
+    },
 )
 
 category_feature = ns.model(

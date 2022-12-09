@@ -12,10 +12,11 @@ to load into a gpkg file, but the same queries are not available,i.e. AsGeoJSON
 
 import os
 import sqlite3
-import pandas as pd
+
 import geopandas as gpd
+import pandas as pd
 import shapely.wkb as swkb
-from shapely.geometry import Polygon, MultiPolygon, Point
+from shapely.geometry import MultiPolygon, Point, Polygon
 
 DB_PATH = os.path.join(os.getcwd(), "geo.db")
 

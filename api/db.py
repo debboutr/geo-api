@@ -6,10 +6,8 @@ from flask.cli import with_appcontext
 
 
 def get_db():
-    if 'db' not in g:
-        g.db = sqlite3.connect(
-            current_app.config['DATABASE_URL']
-        )
+    if "db" not in g:
+        g.db = sqlite3.connect(current_app.config["DATABASE_URL"])
         g.db.enable_load_extension(True)
         g.db.execute("SELECT load_extension('mod_spatialite')")
         g.db.row_factory = sqlite3.Row
@@ -18,10 +16,11 @@ def get_db():
 
 
 def close_db(e=None):
-    db = g.pop('db', None)
+    db = g.pop("db", None)
 
     if db is not None:
         db.close()
+
 
 def init_app(app):
     app.teardown_appcontext(close_db)

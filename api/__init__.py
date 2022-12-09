@@ -2,6 +2,7 @@ import os
 
 from flask import Flask
 from flask_cors import CORS
+
 from api.endpoints import api_v1 as api
 
 

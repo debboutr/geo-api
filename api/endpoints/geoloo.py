@@ -1,12 +1,13 @@
+from functools import partial
+from http import HTTPStatus
+
 import geopy.distance
 import pyproj
 from flask import request
-from flask_restx import Namespace, Resource, abort
-from flask_restx import fields
-from functools import partial
-from geopy import Point as GeopyPoint, distance
-from http import HTTPStatus
-from shapely.geometry import Polygon, LineString
+from flask_restx import Namespace, Resource, abort, fields
+from geopy import Point as GeopyPoint
+from geopy import distance
+from shapely.geometry import LineString, Polygon
 from shapely.ops import transform
 
 ns = Namespace("workingonit")
